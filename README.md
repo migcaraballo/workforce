@@ -7,6 +7,7 @@ $ go get github.com/migcaraballo/workforce
 ` 
 
 ## Example
+Below is a simple example. For working examples you can run yourself, see tests and examples dir.
 ```
 func main(){
 	workers := 3
