@@ -45,10 +45,10 @@ func main(){
 		}
 
 		// add the worker to the pool
-		pool.AddWorker(wrk)
+		pool.Add(wrk)
 	}
 
 	// start the pool and defer stopping until all work is done
-	pool.StartPool()
-	defer pool.StopPool()
+	pool.Start()
+	defer pool.Stop()
 }

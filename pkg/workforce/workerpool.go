@@ -50,7 +50,7 @@ func NewWorkerPool(name string, queSize int) (*WorkerPool, error) {
 }
 
 // Use this function to add workers to the pool before starting
-func (wp *WorkerPool) AddWorker(w *Worker) {
+func (wp *WorkerPool) Add(w *Worker) {
 	w.donChan = wp.doneChan
 	wp.workerPool = append(wp.workerPool, *w)
 }
@@ -74,7 +74,7 @@ func (wp *WorkerPool) startWorker(jchan <- chan Worker) {
 }
 
 // Public function to start the pool and workers
-func (wp *WorkerPool) StartPool(){
+func (wp *WorkerPool) Start(){
 	Debug(fmt.Sprintf("[%s] Starting pool with %d workers & que = %d", wp.Name, len(wp.workerPool), wp.buffSize))
 
 	// start the worker channels
@@ -98,7 +98,7 @@ func (wp *WorkerPool) StartPool(){
 }
 
 // Public function to stop worker pool and all workers
-func (wp *WorkerPool) StopPool(){
+func (wp *WorkerPool) Stop(){
 	Debug(fmt.Sprintf("Stoping [%s] workerPool", wp.Name))
 	wp.stopChan <- true
 	Debug(fmt.Sprintf("Total workers: %d", len(wp.workerChan)))

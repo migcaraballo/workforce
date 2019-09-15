@@ -36,11 +36,11 @@ func TestNewWorkerPool_Default(t *testing.T) {
 			log.Printf("(%s) working...", w.ID)
 		}
 
-		wp.AddWorker(w)
+		wp.Add(w)
 	}
 
-	wp.StartPool()
-	defer wp.StopPool()
+	wp.Start()
+	defer wp.Stop()
 }
 
 // This test spins up a pool of 5 workers which work for 10 seconds. During the 10 seconds, work is being done
@@ -48,6 +48,7 @@ func TestNewWorkerPool_Default(t *testing.T) {
 // calls counter is an approximation since we are not using a mutex to synchronize on the calls variable.
 func TestNewWorkerPool_TenSecWorker(t *testing.T) {
 	setup()
+	runtime := time.Duration(5)
 	workers := 5
 	pool, _ := NewWorkerPool("topic-test", 10)
 	//pool, _ := NewWorkerPool("topic-test", workers, 10)
@@ -72,15 +73,15 @@ func TestNewWorkerPool_TenSecWorker(t *testing.T) {
 			}()
 
 			// test long durations
-			time.Sleep(10 * time.Second)
+			time.Sleep(runtime * time.Second)
 
 			fmt.Printf("(%s) calls: %d\n", l.ID, calls)
 			fmt.Printf("(%s) stopped listening\n", l.ID)
 		}
 
-		pool.AddWorker(l)
+		pool.Add(l)
 	}
 
-	pool.StartPool()
-	defer pool.StopPool()
+	pool.Start()
+	defer pool.Stop()
 }
