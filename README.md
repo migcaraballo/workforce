@@ -1,5 +1,5 @@
 # Workforce
-Workforce is a simple go package to create and use worker pools.
+Workforce is a simple go module to create and use worker pools.
 
 ## Installation
 `
