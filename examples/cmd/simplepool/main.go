@@ -1,15 +1,25 @@
-# Workforce
-Workforce is a simple go package to create and use worker pools.
+package main
 
-## Installation
-`
-$ go get github.com/migcaraballo/workforce
-` 
+import (
+	"fmt"
+	"os"
+	"strconv"
+	"time"
+	"github.com/migcaraballo/workforce/pkg/workforce"
+)
 
-## Example
-```
+const defaultWorkers = 3
+
 func main(){
-	workers := 3
+	workers := defaultWorkers
+
+	// see if any worker count was passed in
+	if len(os.Args) == 2 {
+		w, err := strconv.Atoi(os.Args[1])
+		if err == nil {
+			workers = w
+		}
+	}
 
 	// create a new worker pool
 	pool, err := workforce.NewWorkerPool("sample-pool", 10)
@@ -42,10 +52,3 @@ func main(){
 	pool.StartPool()
 	defer pool.StopPool()
 }
-```
-
-##### Background
-Originally created for my personal use, i didn't want to keep having to re-write this every time i needed a worker pool. However, the real goal is to be able to keep my concurrent thoughts in one place. 
-
-If you would like to help me improve this project, please fork this repo and submit some pull requests against the dev branch
-
