@@ -47,5 +47,5 @@ func main(){
 ##### Background
 Originally created for my personal use, i didn't want to keep having to re-write this every time i needed a worker pool. However, the real goal is to be able to keep my concurrent thoughts in one place. 
 
-If you would like to help me improve this project, please fork this repo and submit some pull requests against the dev branch
+If you would like to help me improve this project, please fork this repo and submit some pull requests.
 
