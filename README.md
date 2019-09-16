@@ -12,7 +12,7 @@ Below is a simple example. For working examples you can run yourself, see tests 
 func main(){
 	workers := 3
 
-	// create a new worker pool
+	// create a new worker pool with buffer size of 10
 	pool, err := workforce.NewWorkerPool("sample-pool", 10)
 
 	if err != nil {

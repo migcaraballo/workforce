@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"testing"
 	"time"
 )
 
 func setup(){
-	os.Setenv(WORKFORCE_DEBUG_ENV, "true")
+	//os.Setenv(WORKFORCE_DEBUG_ENV, "true")
 }
 
 // Simple test to fire off 10 workers in a pool.
@@ -18,7 +17,6 @@ func setup(){
 func TestNewWorkerPool_Default(t *testing.T) {
 	setup()
 	workers := 10
-	//wp, err := NewWorkerPool("test-workerPool", workers, 1)
 	wp, err := NewWorkerPool("test-workerPool", 1)
 
 	if err != nil {
@@ -51,7 +49,6 @@ func TestNewWorkerPool_TenSecWorker(t *testing.T) {
 	runtime := time.Duration(5)
 	workers := 5
 	pool, _ := NewWorkerPool("topic-test", 10)
-	//pool, _ := NewWorkerPool("topic-test", workers, 10)
 
 	for i := 1; i <= workers; i++ {
 		l := NewWorker(fmt.Sprintf("wrk-%d", i))
