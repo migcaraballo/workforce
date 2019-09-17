@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/migcaraballo/workforce"
 	"os"
 	"strconv"
 	"time"
-	"github.com/migcaraballo/workforce/pkg/workforce"
 )
 
 const defaultWorkers = 3
