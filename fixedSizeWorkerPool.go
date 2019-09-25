@@ -44,9 +44,9 @@ func (fsp *FixedSizeWorkerPool) startWorker(name string){
 		log.Printf("[%s] waiting for work\n", name)
 		select {
 		case wf := <- fsp.workerChan:
-			//log.Printf("[%s] working", name)
+			log.Printf("[%s] working", name)
 			fsp.handleWork(wf)
-			//log.Printf("[%s] done", name)
+			log.Printf("[%s] done", name)
 		case <- fsp.stopChan:
 			log.Printf("[%s] stopped working", name)
 			return
