@@ -17,7 +17,7 @@ func setup(){
 func TestNewWorkerPool_Default(t *testing.T) {
 	setup()
 	workers := 10
-	wp, err := NewWorkerPool("test-workerPool", 1)
+	wp, err := NewWorkerPool("test-workerList", 1)
 
 	if err != nil {
 		panic(err)

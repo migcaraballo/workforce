@@ -17,16 +17,13 @@ type Worker struct {
 
 // Internal function. This should only be called by the WorkerPool. This should not be called by anything else
 func (w *Worker) work() {
-	var st time.Time
-
 	if IsDebug(){
-		st = time.Now()
+		st := time.Now()
+		defer Debug(fmt.Sprintf("(%s) done - runtime: %f secs", w.ID, time.Since(st).Seconds()))
 	}
 
 	w.WorkHandler()
 	w.donChan <- true
-
-	Debug(fmt.Sprintf("(%s) done - runtime: %f secs", w.ID, time.Since(st).Seconds()))
 }
 
 // Convenience function to create new workers.
