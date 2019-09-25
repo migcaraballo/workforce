@@ -20,7 +20,7 @@ func TestNewFixedSizeWorkerPool_OneWorker(t *testing.T) {
 	for i := 1; i <= tasks; i++ {
 		name := fmt.Sprintf("func-%d", i)
 
-		pool.SubmitWork(func() error {
+		pool.AsyncSubmit(func() error {
 			log.Printf("[%s] doing some work.", name)
 
 			time.Sleep(500 * time.Millisecond)

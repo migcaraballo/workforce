@@ -78,9 +78,12 @@ func (fsp *FixedSizeWorkerPool) Stop() {
 	fsp.stopChan <- true
 }
 
-func (fsp *FixedSizeWorkerPool) SubmitWork(workerFunc func() error) {
-	// submit work async
+func (fsp *FixedSizeWorkerPool) AsyncSubmit(workerFunc func() error) {
 	go func() {
 		fsp.workerChan <- workerFunc
 	}()
+}
+
+func (fsp *FixedSizeWorkerPool) SyncSubmit(workerFunc func() error) {
+	fsp.workerChan <- workerFunc
 }
