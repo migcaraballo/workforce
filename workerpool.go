@@ -18,11 +18,9 @@ type WorkerPool struct {
 	// string name of pool to be used in debugging output
 	Name        string
 	// slice of workers that will be doing concurrent work
-	workerPool  []Worker
+	workerList []Worker
 	// buffered channel to submit workers
 	workerChan chan Worker
-	// buffered channel used by workers to signal when complete
-	doneChan   chan bool
 	// channel used by pool to send stop signal
 	stopChan   chan bool
 	// size of buffer for workerChan & doneChan
@@ -42,22 +40,20 @@ func NewWorkerPool(name string, queSize int) (*WorkerPool, error) {
 	return &WorkerPool{
 		Name:       name,
 		workerChan: make(chan Worker, queSize),
-		doneChan:   make(chan bool, queSize),
 		stopChan:   make(chan bool),
-		workerPool: []Worker{},
+		workerList: []Worker{},
 		buffSize:   queSize,
 	}, nil
 }
 
 // Use this function to add workers to the pool before starting
 func (wp *WorkerPool) Add(w *Worker) {
-	w.donChan = wp.doneChan
-	wp.workerPool = append(wp.workerPool, *w)
+	wp.workerList = append(wp.workerList, *w)
 }
 
 // Use this function to set all workers at once
 func (wp *WorkerPool) SetWorkers(wrks []Worker){
-	wp.workerPool = wrks
+	wp.workerList = wrks
 }
 
 // pipeline function to create pool of workers
@@ -75,31 +71,31 @@ func (wp *WorkerPool) startWorker(jchan <- chan Worker) {
 
 // Public function to start the pool and workers
 func (wp *WorkerPool) Start(){
-	Debug(fmt.Sprintf("[%s] Starting pool with %d workers & que = %d", wp.Name, len(wp.workerPool), wp.buffSize))
+	Debug(fmt.Sprintf("[%s] Starting pool with %d workers & que = %d", wp.Name, len(wp.workerList), wp.buffSize))
 
 	// start the worker channels
-	for i := 0; i < len(wp.workerPool); i++ {
+	for i := 0; i < len(wp.workerList); i++ {
 		go wp.startWorker(wp.workerChan)
 	}
 
 	// send work to the channels
 	go func() {
-		for _, w := range wp.workerPool {
+		for _, w := range wp.workerList {
 			wp.workerChan <- w
 		}
 	}()
 
-	for i := 0; i < len(wp.workerPool); i++ {
-		<-wp.doneChan
+	for _, w := range wp.workerList {
+		<- w.doneChan
 	}
 
 	Debug(fmt.Sprintf("[%s] workers working: %d", wp.Name, len(wp.workerChan)))
-	Debug(fmt.Sprintf("[%s] workers requested: %d", wp.Name, len(wp.workerPool)))
+	Debug(fmt.Sprintf("[%s] workers requested: %d", wp.Name, len(wp.workerList)))
 }
 
 // Public function to stop worker pool and all workers
 func (wp *WorkerPool) Stop(){
-	Debug(fmt.Sprintf("Stoping [%s] workerPool", wp.Name))
+	Debug(fmt.Sprintf("Stoping [%s] workerList", wp.Name))
 	wp.stopChan <- true
 	Debug(fmt.Sprintf("Total workers: %d", len(wp.workerChan)))
 }

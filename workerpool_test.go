@@ -17,21 +17,20 @@ func setup(){
 func TestNewWorkerPool_Default(t *testing.T) {
 	setup()
 	workers := 10
-	wp, err := NewWorkerPool("test-workerPool", 1)
+	wp, err := NewWorkerPool("test-workerList", 1)
 
 	if err != nil {
 		panic(err)
 	}
 
 	for i := 1; i <= workers; i++ {
-		w := &Worker{
-			ID: fmt.Sprintf("tw-%d", i),
-		}
+		w := NewWorker(fmt.Sprintf("tw-%d", i))
 
 		// mock function that sleeps for 1 second
 		w.WorkHandler = func() {
-			time.Sleep(1 * time.Second)
 			log.Printf("(%s) working...", w.ID)
+			time.Sleep(1 * time.Second)
+			log.Printf("(%s) DONE working...", w.ID)
 		}
 
 		wp.Add(w)
@@ -39,6 +38,7 @@ func TestNewWorkerPool_Default(t *testing.T) {
 
 	wp.Start()
 	defer wp.Stop()
+	time.Sleep(2 * time.Second)
 }
 
 // This test spins up a pool of 5 workers which work for 10 seconds. During the 10 seconds, work is being done
