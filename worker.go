@@ -30,11 +30,3 @@ func NewWorker(id string) *Worker {
 		doneChan: make(chan bool),
 	}
 }
-
-// Convenience function to create new workers.
-func NewWorkerWithFunc(id string, wrkFunc func()) *Worker {
-	return &Worker{
-		ID: id,
-		WorkHandler: wrkFunc,
-	}
-}

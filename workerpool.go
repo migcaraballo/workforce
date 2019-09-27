@@ -21,8 +21,6 @@ type WorkerPool struct {
 	workerList []Worker
 	// buffered channel to submit workers
 	workerChan chan Worker
-	// buffered channel used by workers to signal when complete
-	//doneChan   chan bool
 	// channel used by pool to send stop signal
 	stopChan   chan bool
 	// size of buffer for workerChan & doneChan
@@ -42,7 +40,6 @@ func NewWorkerPool(name string, queSize int) (*WorkerPool, error) {
 	return &WorkerPool{
 		Name:       name,
 		workerChan: make(chan Worker, queSize),
-		//doneChan:   make(chan bool, queSize),
 		stopChan:   make(chan bool),
 		workerList: []Worker{},
 		buffSize:   queSize,
@@ -87,10 +84,6 @@ func (wp *WorkerPool) Start(){
 			wp.workerChan <- w
 		}
 	}()
-
-	/*for i := 0; i < len(wp.workerList); i++ {
-		<-wp.doneChan
-	}*/
 
 	for _, w := range wp.workerList {
 		<- w.doneChan

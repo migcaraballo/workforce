@@ -24,10 +24,6 @@ func TestNewWorkerPool_Default(t *testing.T) {
 	}
 
 	for i := 1; i <= workers; i++ {
-		/*w := &Worker{
-			ID: fmt.Sprintf("tw-%d", i),
-		}*/
-
 		w := NewWorker(fmt.Sprintf("tw-%d", i))
 
 		// mock function that sleeps for 1 second
@@ -42,7 +38,6 @@ func TestNewWorkerPool_Default(t *testing.T) {
 
 	wp.Start()
 	defer wp.Stop()
-
 	time.Sleep(2 * time.Second)
 }
 
