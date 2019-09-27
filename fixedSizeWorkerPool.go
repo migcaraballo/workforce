@@ -7,6 +7,12 @@ import (
 	"log"
 )
 
+var (
+	// patther: [poolName-type-workerName-ID]
+	logMsgPattern = "%s-fixed"
+)
+
+
 type FixedSizeWorkerPool struct {
 	// string name of pool to be used in debugging output
 	Name        string
@@ -44,11 +50,14 @@ func (fsp *FixedSizeWorkerPool) startWorker(name string){
 		log.Printf("[%s] waiting for work\n", name)
 		select {
 		case wf := <- fsp.workerChan:
-			log.Printf("[%s] working", name)
+			//log.Printf("[%s] working", name)
+			fsp.debug(fmt.Sprintf("[%s] working", name))
 			fsp.handleWork(wf)
-			log.Printf("[%s] done", name)
+			//log.Printf("[%s] done", name)
+			fsp.debug(fmt.Sprintf("[%s] done", name))
 		case <- fsp.stopChan:
-			log.Printf("[%s] stopped working", name)
+			//log.Printf("[%s] stopped working", name)
+			fsp.debug(fmt.Sprintf("[%s] stopped working", name))
 			return
 		}
 	}
@@ -56,7 +65,8 @@ func (fsp *FixedSizeWorkerPool) startWorker(name string){
 
 func (fsp *FixedSizeWorkerPool) handleWork(wf func() error) {
 	if err := wf(); err != nil {
-		log.Printf("workFunc err: %s\n", err)
+		//log.Printf("workFunc err: %s\n", err)
+		fsp.debug(fmt.Sprintf("workFunc err: %s\n", err))
 	}
 }
 
@@ -70,7 +80,8 @@ func (fsp *FixedSizeWorkerPool) Start() error {
 		go fsp.startWorker(fmt.Sprintf("worker-%d", i))
 	}
 
-	log.Printf("Total Workers started: %d\n", fsp.workersStarted)
+	//log.Printf("Total Workers started: %d\n", fsp.workersStarted)
+	fsp.debug(fmt.Sprintf("Total Workers started: %d\n", fsp.workersStarted))
 	return nil
 }
 
@@ -86,4 +97,8 @@ func (fsp *FixedSizeWorkerPool) AsyncSubmit(workerFunc func() error) {
 
 func (fsp *FixedSizeWorkerPool) SyncSubmit(workerFunc func() error) {
 	fsp.workerChan <- workerFunc
+}
+
+func (fsp *FixedSizeWorkerPool) debug(msg string){
+	log.Printf("["+logMsgPattern+"] %s\n", fsp.Name, msg)
 }

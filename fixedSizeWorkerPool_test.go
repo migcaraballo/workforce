@@ -21,10 +21,14 @@ func TestNewFixedSizeWorkerPool_OneWorker(t *testing.T) {
 		name := fmt.Sprintf("func-%d", i)
 
 		pool.AsyncSubmit(func() error {
-			log.Printf("[%s] doing some work.", name)
+			//log.Printf("[%s] doing some work.", name)
+			pool.debug(fmt.Sprintf("[%s] doing some work.", name))
 
+			// do some work
 			time.Sleep(500 * time.Millisecond)
-			log.Printf("[%s] Finished working...", name)
+
+			//log.Printf("[%s] Finished working...", name)
+			pool.debug(fmt.Sprintf("[%s] Finished working...", name))
 			return nil
 		})
 	}

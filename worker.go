@@ -7,11 +7,8 @@ import (
 
 // Worker represents a unit of work that needs to be done repeatedly based on the WorkHandler function
 type Worker struct {
-	// ID identifies which worker is doing work
 	ID          string
-	// channel for worker to send responses to
-	donChan     chan bool
-	// the function supplied to be executed per iteration of this worker
+	doneChan    chan bool
 	WorkHandler func()
 }
 
@@ -23,13 +20,14 @@ func (w *Worker) work() {
 	}
 
 	w.WorkHandler()
-	w.donChan <- true
+	w.doneChan <- true
 }
 
 // Convenience function to create new workers.
 func NewWorker(id string) *Worker {
 	return &Worker{
 		ID: id,
+		doneChan: make(chan bool),
 	}
 }
 
